@@ -1001,22 +1001,47 @@ ivec3 getMaxComputeWorkGroupSize()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // debug groups
 #if defined( CINDER_GL_HAS_KHR_DEBUG )
+#if defined( GL_DEBUG_SOURCE_APPLICATION_KHR ) && !defined( GL_DEBUG_SOURCE_APPLICATION )
+#define __USE_KHR_SUFFIX__
+#endif
+
 void pushDebugGroup( const std::string &message )
 {
+#if defined( __USE_KHR_SUFFIX__ )
+	glPushDebugGroupKHR( GL_DEBUG_SOURCE_APPLICATION_KHR, 0, -1, message.c_str() );
+#else
 	glPushDebugGroup( GL_DEBUG_SOURCE_APPLICATION, 0, -1, message.c_str() );
+#endif
 }
+
 void pushDebugGroup( GLuint id, const std::string &message )
 {
+#if defined( __USE_KHR_SUFFIX__ )
+	glPushDebugGroupKHR( GL_DEBUG_SOURCE_APPLICATION_KHR, id, -1, message.c_str() );
+#else
 	glPushDebugGroup( GL_DEBUG_SOURCE_APPLICATION, id, -1, message.c_str() );
+#endif
 }
+
 void pushDebugGroup( GLenum source, GLuint id, const std::string &message )
 {
+#if defined( __USE_KHR_SUFFIX__ )
+	glPushDebugGroupKHR( source, id, -1, message.c_str() );
+#else
 	glPushDebugGroup( source, id, -1, message.c_str() );
+#endif
 }
+
 void popDebugGroup()
 {
+#if defined( __USE_KHR_SUFFIX__ )
+	glPopDebugGroupKHR();
+#else
 	glPopDebugGroup();
+#endif
 }
+
+#undef __USE_KHR_SUFFIX__
 #endif
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
